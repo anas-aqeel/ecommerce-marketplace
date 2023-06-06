@@ -1,4 +1,8 @@
-import Navbar from '../components/section/Navbar'
+'use client'
+import Navbar from '../components/Navbar'
+import { SessionProvider } from 'next-auth/react'
+import { Session } from 'next-auth'
+
 import './globals.css'
 import { Inter } from 'next/font/google'
 
@@ -11,14 +15,18 @@ export const metadata = {
 
 export default function RootLayout({
   children,
+  session,
 }: {
   children: React.ReactNode
+  session: Session
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Navbar />
-        {children}
+      <body className={inter.className + ' min-h-screen'}>
+        <SessionProvider session={session}>
+          <Navbar />
+          <div className="min-h-[90vh]  w-screen">{children}</div>
+        </SessionProvider>
       </body>
     </html>
   )
