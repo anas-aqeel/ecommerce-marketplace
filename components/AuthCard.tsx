@@ -1,6 +1,5 @@
 'use client'
 
-import {  signIn } from 'next-auth/react'
 import { Button } from './ui/button'
 import {
   Card,
@@ -21,10 +20,6 @@ export default function Auth() {
     password: '',
   })
   let handleSubmit = () => {
-    signIn("credentials", {
-      email: formValues.email,
-      password: formValues.password
-    })
   }
   return (
     <Card>
@@ -39,7 +34,6 @@ export default function Auth() {
           <Button
             variant="outline"
             onClick={() => {
-              signIn('github')
             }}
           >
             <GithubIcon className="mr-2 h-4 w-4" />
@@ -48,7 +42,6 @@ export default function Auth() {
           <Button
             variant="outline"
             onClick={() => {
-              signIn('google')
             }}
           >
             <GithubIcon className="mr-2 h-4 w-4" />
