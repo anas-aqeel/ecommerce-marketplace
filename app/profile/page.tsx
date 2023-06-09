@@ -1,25 +1,26 @@
 "use client"
 import React from 'react'
 import ProfileCard from '../../components/ProfileCard'
-import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@clerk/nextjs'
 
-const page = () => {
-  const { data: session } = useSession()
+const Page = () => {
+  let auth = useAuth()
   let router = useRouter()
 
-  if (session != undefined) {
+  if (auth.isSignedIn) {
     return (
       <>
-        <ProfileCard user={session.user} />
-        <button onClick={() => signOut()}>Sign out</button>
+        {/* <ProfileCard user={auth.} /> */}
+        <button onClick={() =>auth.signOut()}>Sign out</button>
       </>
     )
   }
   else{
-    router.push('/login')
+    router.push('/sign-in')
+    return<></>
   }
  
 }
 
-export default page
+export default Page

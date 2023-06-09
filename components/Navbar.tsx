@@ -40,9 +40,9 @@ export default function Navbar() {
           id="navbar-sticky"
         >
           <ul className="mt-4 flex flex-col rounded-lg border border-gray-100 bg-gray-50 p-4 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:text-sm md:font-medium">
-            {navigation.map((e) => {
+            {navigation.map((e,i) => {
               return (
-                <li>
+                <li key={i}>
                   <a
                     href={e.href}
                     className="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white md:bg-transparent md:p-0 md:text-blue-700"

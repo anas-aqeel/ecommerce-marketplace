@@ -20,8 +20,8 @@ const Products = () => {
 
   return (
     <>
-      {products.map((product: any) => (
-        <ProductCard product={product} />
+      {products.map((product: any,i:number) => (
+        <ProductCard key={i} product={product} />
       ))}
     </>
   )
