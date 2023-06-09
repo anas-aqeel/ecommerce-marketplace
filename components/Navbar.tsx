@@ -1,10 +1,10 @@
 import MenuCard from './menuCard'
 
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
+  { name: 'Home', href: '/', current: true },
+  { name: 'Explore', href: '/products', current: false },
+  { name: 'Ceate', href: '', current: false },
+  { name: 'Contact', href: '#', current: false },
 ]
 
 

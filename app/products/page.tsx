@@ -1,7 +1,4 @@
 import React from 'react'
-import { client } from '../../lib/sanityClient'
-import { Star } from 'lucide-react'
-import { urlForImage } from '../../lib/sanityImageBuilder'
 import Products from '../../components/section/Products'
 
 const page = () => {
@@ -96,9 +93,8 @@ const page = () => {
       </div>
       {/* Product List */}
       <section className="py-10 bg-gray-100">
-        <div className="mx-auto grid max-w-6xl  grid-cols-1 gap-6 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           <Products />
-        </div>
+       
       </section>
     </>
   )

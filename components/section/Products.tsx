@@ -1,29 +1,19 @@
+"use client"
 import React, { use } from 'react'
-import { client } from '../../lib/sanityClient'
 import ProductCard from '../ProductCard'
+import { fetchAllProducts } from '../../sanity/lib/fetchAllProducts'
 
-
-
-const fetchProducts = async () => {
-  try {
-    const query = '*[_type == "product"]'
-    const products = await client.fetch(query)
-    return products
-  } catch (error) {
-    console.error('Error fetching products:', error)
-    return []
-  }
-}
 
 const Products = () => {
-  let products = use(fetchProducts())
+  let products = use(fetchAllProducts())
 
   return (
-    <>
-      {products.map((product: any,i:number) => (
+    <div className="mx-auto grid max-w-6xl  grid-cols-1 gap-6 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      
+      {products && products.map((product: any, i: number) => (
         <ProductCard key={i} product={product} />
       ))}
-    </>
+    </div>
   )
 }
 
