@@ -10,7 +10,7 @@ const ProductCard = ({ product }: any) => {
       <article className="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300 ">
         <a href="#">
           <div className="relative flex items-end overflow-hidden rounded-xl">
-            <Image src={urlForImage(product.images[0])?.url()} alt="Hotel Photo" />
+            <Image src={urlForImage(product.images[0])?.url()} width={'300'} height={200} className="w-full h-auto" alt="Hotel Photo" />
             <div className="absolute bottom-3 left-3 inline-flex items-center rounded-lg bg-white p-2 shadow-md">
               <Star className="text-yellow-400  fill-yellow-400  text-base" />
               <span className="ml-1 text-sm text-slate-400">4.9</span>

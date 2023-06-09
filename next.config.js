@@ -2,6 +2,7 @@
 const nextConfig = {
   experimental: {
     appDir: true,
+    
   },
   env: {
     SANITY_STUDIO_NEXT_PUBLIC_SANITY_PROJECT_ID: process.env.SANITY_STUDIO_NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -14,6 +15,9 @@ const nextConfig = {
     NEXT_PUBLIC_CLERK_API_SECRET: process.env.NEXT_PUBLIC_CLERK_API_SECRET,
     
   },
+  images:{
+    domains: ['cdn.sanity.io'],
+  }
 };
 
 module.exports = nextConfig;
