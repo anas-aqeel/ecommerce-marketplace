@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { fetchProductById } from '../../../sanity/lib/fetchProductById'
 import { urlForImage } from '../../../lib/sanityImageBuilder'
 
-const page = () => {
+const Page = () => {
   let productId = usePathname().split('/')[2]
   let product = use(fetchProductById(productId))[0];
   
@@ -63,4 +63,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

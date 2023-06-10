@@ -13,7 +13,7 @@ function classNames(...classes: string[]) {
 const MenuCard = () => {
   let router = useRouter()
   let auth = useAuth()
-
+  console.log(auth)
   let menuItems = [
     {
       label: 'Your Profile',

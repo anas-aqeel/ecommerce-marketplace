@@ -3,7 +3,7 @@ import MenuCard from './menuCard'
 const navigation = [
   { name: 'Home', href: '/', current: true },
   { name: 'Explore', href: '/products', current: false },
-  { name: 'Ceate', href: '', current: false },
+  { name: 'Ceate', href: '#', current: false },
   { name: 'Contact', href: '#', current: false },
 ]
 
