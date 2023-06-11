@@ -45,6 +45,7 @@ export default function Navbar() {
               return (
                 <li key={i}>
                   <Link
+                    shallow
                     prefetch
                     passHref
                     legacyBehavior

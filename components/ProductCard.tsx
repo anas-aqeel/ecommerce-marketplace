@@ -12,6 +12,7 @@ const ProductCard = ({ product }: any) => {
       {/* component */}
       <Link
        href={`/products/${product._id}`}
+       shallow
         className=" w-full transform overflow-hidden rounded-lg bg-white dark:bg-slate-800 shadow-md duration-300 hover:scale-105 hover:shadow-lg"
       >
         <img

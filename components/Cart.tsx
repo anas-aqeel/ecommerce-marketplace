@@ -1,65 +1,103 @@
-"use client";
-import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { fetchProductById } from "../sanity/lib/fetchProductsByIds";
-import { urlForImage } from "../sanity/lib/image";
-import { useAuth } from "@clerk/nextjs";
+'use client'
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import { fetchProductById } from '../sanity/lib/fetchProductsByIds'
+import { urlForImage } from '../sanity/lib/image'
+import { useAuth } from '@clerk/nextjs'
+import { ToastAction } from './ui/toast'
+import { useToast } from './ui/use-toast'
+import { Loader2 } from 'lucide-react'
 
 export default function Cart({
   openPop,
   setOpenPop,
 }: {
-  openPop: boolean;
-  setOpenPop: Dispatch<SetStateAction<boolean>>;
+  openPop: boolean
+  setOpenPop: Dispatch<SetStateAction<boolean>>
 }) {
-  let [product, setProduct] = useState([]);
-  let { userId } = useAuth();
+  let { toast } = useToast()
+  let [product, setProduct] = useState([])
+  let [total, setTotal] = useState(0)
+  let { userId } = useAuth()
+
   const fetchProducts = async () => {
     if (userId != null || userId != undefined) {
       const response = await fetch(
-        "http://localhost:3000/api/cart/getByUserId",
+        'http://localhost:3000/api/cart/getByUserId',
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             user_id: userId,
           }),
-        }
-      );
-      const data = await response.json();
-      console.log("data: ", data);
+        },
+      )
+      const data = await response.json()
+
+      console.log('data: ', data)
       const products = await fetchProductById(
-        data.map((product: any) => product.product_id)
-      );
-      console.log("products: ", products);
-      setProduct(products);
+        data.map((product: any) => product.product_id),
+      )
+      console.log('products: ', products)
+      setProduct(
+        products.map((product: any, i: number) => ({
+          ...product,
+          cart: { ...data[i] },
+        })),
+      )
     }
-  };
-  let handleDelete = (product_id: string) => {
+  }
+
+  let handleDelete = async (product_id: string) => {
+    console.log('handleDelete')
     try {
-      console.log({
-        user_id: userId,
-        product_id: product_id,
-      });
-      fetch("http://localhost:3000/api/cart/delete", {
-        method: "POST",
+      let delReq = await fetch('http://localhost:3000/api/cart/delete', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           user_id: userId,
           product_id: product_id,
         }),
-      });
+      })
+      console.log('delReq: ', delReq)
+      if (delReq.ok) {
+        setProduct((currentProducts) =>
+          currentProducts.filter((product: any) => product._id != product_id),
+        )
+        toast({
+          title: 'Action: Remove from Cart ',
+          description: `Item successfully removed from cart`,
+          action: <ToastAction altText="Go to cart">Add more</ToastAction>,
+        })
+      } else {
+        throw new Error('Internal Server Error')
+      }
     } catch (e) {
-      console.log(e);
+      toast({
+        title: 'Error: Remove from Cart ',
+        description: `Error while Removing from cart`,
+        action: <ToastAction altText="Go to cart">Retry</ToastAction>,
+      })
+      console.log(e)
     }
-  };
+  }
+
   useEffect(() => {
-    fetchProducts();
-  }, [useAuth().userId]);
+    fetchProducts()
+  }, [useAuth().userId])
+
+  useEffect(() => {
+    setTotal(
+      product.reduce(
+        (acc, product: any) => acc + product.price * product.cart.quantity,
+        0,
+      ),
+    )
+  }, [product])
 
   return (
     <Transition.Root show={openPop} as={Fragment}>
@@ -118,9 +156,9 @@ export default function Cart({
                                   <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                     <img
                                       src={urlForImage(
-                                        product.images[0]
+                                        product.images[0],
                                       )?.url()}
-                                      alt={"Product Image"}
+                                      alt={'Product Image'}
                                       className="h-full w-full object-cover object-center"
                                     />
                                   </div>
@@ -141,7 +179,7 @@ export default function Cart({
                                     </div>
                                     <div className="flex flex-1 items-end justify-between text-sm">
                                       <p className="text-gray-500">
-                                        Qty {product.quantity}
+                                        Qty {product.cart.quantity}
                                       </p>
 
                                       <div className="flex">
@@ -150,8 +188,9 @@ export default function Cart({
                                             handleDelete(product._id)
                                           }
                                           type="button"
-                                          className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                          className="group inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                         >
+                                          <Loader2 className="animate-spin h-5 w-5 mr-2 text-white hidden group-focus:flex" />
                                           Remove
                                         </button>
                                       </div>
@@ -167,7 +206,7 @@ export default function Cart({
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
-                        <p>$262.00</p>
+                        <p>${total}</p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">
                         Shipping and taxes calculated at checkout.
@@ -202,5 +241,5 @@ export default function Cart({
         </div>
       </Dialog>
     </Transition.Root>
-  );
+  )
 }
