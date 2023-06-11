@@ -1,37 +1,68 @@
 'use client'
-import { Dispatch, Fragment, SetStateAction, useState } from 'react'
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import { fetchProductById } from '../sanity/lib/fetchProductsByIds'
+import { urlForImage } from '../sanity/lib/image'
+import { useAuth } from '@clerk/nextjs'
 
-const products = [
-  {
-    id: 1,
-    name: 'Throwback Hip Bag',
-    href: '#',
-    color: 'Salmon',
-    price: '$90.00',
-    quantity: 1,
-    imageSrc:
-      'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
-    imageAlt:
-      'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-  },
-  {
-    id: 2,
-    name: 'Medium Stuff Satchel',
-    href: '#',
-    color: 'Blue',
-    price: '$32.00',
-    quantity: 1,
-    imageSrc:
-      'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg',
-    imageAlt:
-      'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-  },
-  // More products...
-]
-
-export default function Cart({ openPop,   setOpenPop }: { openPop: boolean, setOpenPop: Dispatch<SetStateAction<boolean>>}) {
-  
+export default function Cart({
+  openPop,
+  setOpenPop,
+}: {
+  openPop: boolean
+  setOpenPop: Dispatch<SetStateAction<boolean>>
+}) {
+  let [product, setProduct] = useState([])
+  let { userId } = useAuth()
+  const fetchProducts = async () => {
+    if (userId != null || userId != undefined) {
+      const response = await fetch(
+        'http://localhost:3000/api/cart/getByUserId',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: userId,
+          }),
+        },
+      )
+      const data = await response.json()
+      const products = await fetchProductById(
+        data.map((product: any) => product.product_id),
+      )
+      setProduct(
+        products.map((product: any, i: number) => ({
+          ...products[i],
+          ...data[i],
+        })),
+      )
+    }
+  }
+  let handleDelete = (product_id: string) => {
+    try {
+      console.log({
+        user_id: userId,
+        product_id: product_id,
+      })
+      fetch('http://localhost:3000/api/cart/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          product_id: product_id,
+        }),
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  useEffect(() => {
+    fetchProducts()
+  }, [userId])
 
   return (
     <Transition.Root show={openPop} as={Fragment}>
@@ -84,47 +115,53 @@ export default function Cart({ openPop,   setOpenPop }: { openPop: boolean, setO
                             role="list"
                             className="-my-6 divide-y divide-gray-200"
                           >
-                            {products.map((product) => (
-                              <li key={product.id} className="flex py-6">
-                                <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                  <img
-                                    src={product.imageSrc}
-                                    alt={product.imageAlt}
-                                    className="h-full w-full object-cover object-center"
-                                  />
-                                </div>
-
-                                <div className="ml-4 flex flex-1 flex-col">
-                                  <div>
-                                    <div className="flex justify-between text-base font-medium text-gray-900">
-                                      <h3>
-                                        <a href={product.href}>
-                                          {product.name}
-                                        </a>
-                                      </h3>
-                                      <p className="ml-4">{product.price}</p>
-                                    </div>
-                                    <p className="mt-1 text-sm text-gray-500">
-                                      {product.color}
-                                    </p>
+                            {product[0] &&
+                              product.map((product: any) => (
+                                <li key={product._id} className="flex py-6">
+                                  <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                    <img
+                                      src={urlForImage(
+                                        product.images[0],
+                                      )?.url()}
+                                      alt={'Product Image'}
+                                      className="h-full w-full object-cover object-center"
+                                    />
                                   </div>
-                                  <div className="flex flex-1 items-end justify-between text-sm">
-                                    <p className="text-gray-500">
-                                      Qty {product.quantity}
-                                    </p>
 
-                                    <div className="flex">
-                                      <button
-                                        type="button"
-                                        className="font-medium text-indigo-600 hover:text-indigo-500"
-                                      >
-                                        Remove
-                                      </button>
+                                  <div className="ml-4 flex flex-1 flex-col">
+                                    <div>
+                                      <div className="flex justify-between text-base font-medium text-gray-900">
+                                        <h3>
+                                          <a href={product.href}>
+                                            {product.name}
+                                          </a>
+                                        </h3>
+                                        <p className="ml-4">{product.price}</p>
+                                      </div>
+                                      <p className="mt-1 text-sm text-gray-500">
+                                        Yellow
+                                      </p>
+                                    </div>
+                                    <div className="flex flex-1 items-end justify-between text-sm">
+                                      <p className="text-gray-500">
+                                        Qty {product.quantity}
+                                      </p>
+
+                                      <div className="flex">
+                                        <button
+                                          onClick={() =>
+                                            handleDelete(product._id)
+                                          }
+                                          type="button"
+                                          className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                        >
+                                          Remove
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              </li>
-                            ))}
+                                </li>
+                              ))}
                           </ul>
                         </div>
                       </div>

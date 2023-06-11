@@ -1,15 +1,16 @@
-"use client"
+'use client'
 import React, { use } from 'react'
 import ProductFeeds from '../../../components/section/ProductFeeds'
-import { Heart, ShoppingCartIcon, Star } from 'lucide-react'
-import { usePathname, useRouter } from 'next/navigation'
+import { Heart, Star } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 import { fetchProductById } from '../../../sanity/lib/fetchProductById'
 import { urlForImage } from '../../../lib/sanityImageBuilder'
+import AddToCart from '../../../components/AddToCart'
 
 const Page = () => {
   let productId = usePathname().split('/')[2]
-  let product = use(fetchProductById(productId))[0];
-  
+  let product = use(fetchProductById(productId))[0]
+
   return (
     <div>
       <>
@@ -44,10 +45,7 @@ const Page = () => {
                   <span className="title-font font-medium text-2xl text-gray-900">
                     ${product.price}
                   </span>
-                  <button className="flex ml-auto text-white bg-blue-500 border-0 py-2 px-6 pl-4 focus:outline-none rounded hover:scale-110 transition-all">
-                    <ShoppingCartIcon className="text-white mr-2" />
-                    Add to cart
-                  </button>
+                  <AddToCart quantity={1} productId={product._id} />
                   <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
                     <Heart className="text-red-600 hover:fill-red-600" />
                   </button>

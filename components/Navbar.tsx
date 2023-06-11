@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import MenuCard from './menuCard'
 
 const navigation = [
@@ -43,13 +44,16 @@ export default function Navbar() {
             {navigation.map((e,i) => {
               return (
                 <li key={i}>
-                  <a
+                  <Link
+                    prefetch
+                    passHref
+                  
                     href={e.href}
                     className="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white md:bg-transparent md:p-0 md:text-blue-700"
                     aria-current="page"
                   >
                     {e.name}
-                  </a>
+                  </Link>
                 </li>
               )
             })}

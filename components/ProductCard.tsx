@@ -1,18 +1,19 @@
 'use client'
-import { ShoppingCart, Star } from 'lucide-react'
 import { urlForImage } from '../lib/sanityImageBuilder'
 import React from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { ImageUrlBuilder } from '@sanity/image-url/lib/types/builder'
+import Link from 'next/link'
 
 const ProductCard = ({ product }: any) => {
   let router = useRouter()
   return (
-   
     <>
       {/* component */}
-      <button onClick={()=>router.push(`/products/${product._id}`)} className=" w-full transform overflow-hidden rounded-lg bg-white dark:bg-slate-800 shadow-md duration-300 hover:scale-105 hover:shadow-lg">
+      <Link
+       href={`/products/${product._id}`}
+        className=" w-full transform overflow-hidden rounded-lg bg-white dark:bg-slate-800 shadow-md duration-300 hover:scale-105 hover:shadow-lg"
+      >
         <img
           className="w-full object-cover h-auto"
           src={urlForImage(product.images[0])?.url()}
@@ -37,7 +38,7 @@ const ProductCard = ({ product }: any) => {
             </p>
           </div>
         </div>
-      </button >
+      </Link>
     </>
   )
 }
