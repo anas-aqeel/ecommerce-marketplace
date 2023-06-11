@@ -4,7 +4,7 @@ import MenuCard from './menuCard'
 const navigation = [
   { name: 'Home', href: '/', current: true },
   { name: 'Explore', href: '/products', current: false },
-  { name: 'Ceate', href: '#', current: false },
+  { name: 'Ceate', href: '/studio', current: false },
   { name: 'Contact', href: '#', current: false },
 ]
 
@@ -14,12 +14,12 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 z-10 w-full border-b border-gray-200 bg-white py-2.5 px-6 sm:px-4">
      
       <div className="container mx-auto flex max-w-6xl flex-wrap items-center justify-between">
-        <a href="#" className="flex items-center">
+        <Link  href="/" className="flex items-center">
           
           <span className="self-center whitespace-nowrap text-xl font-semibold">
             Termcode
           </span>
-        </a>
+        </Link>
         <div className="mt-2 sm:mt-0 sm:flex md:order-2">
           
           <MenuCard/>
@@ -47,7 +47,7 @@ export default function Navbar() {
                   <Link
                     prefetch
                     passHref
-                  
+                    legacyBehavior
                     href={e.href}
                     className="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white md:bg-transparent md:p-0 md:text-blue-700"
                     aria-current="page"

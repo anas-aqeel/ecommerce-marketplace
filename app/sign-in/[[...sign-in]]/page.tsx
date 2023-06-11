@@ -1,12 +1,10 @@
-'use client'
-import { SignIn } from '@clerk/nextjs'
-export default function Component() {
+export default async function Component() {
+  const SignIn = (await import('@clerk/nextjs')).SignIn
   return (
     <>
-    <div className='flex min-h-screen justify-center items-center'>
-
-      <SignIn />
-    </div>
+      <div className="flex min-h-screen justify-center items-center">
+       <SignIn />
+      </div>
     </>
   )
 }
