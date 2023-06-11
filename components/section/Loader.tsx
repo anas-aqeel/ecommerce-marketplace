@@ -5,7 +5,7 @@ const Loader = () => {
     <>
      {/* component */}
   <div
-    className="inset-0 bg-gray-800 fixed flex w-full h-full items-center justify-center duration-300 transition-opacity"
+    className="  h-[80vh] w-[100vw] flex items-center justify-center duration-300 transition-opacity"
     style={{ zIndex: 6000 }}
   >
     <div className="flex-col">
@@ -48,7 +48,7 @@ const Loader = () => {
           />
         </svg>
       </div>
-      <div className="mt-3 text-gray-200 font-mono text-sm sm:text-xs">
+      <div className="mt-3 text-black font-mono text-sm sm:text-xs">
         Loading...
       </div>
     </div>

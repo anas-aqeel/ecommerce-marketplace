@@ -1,10 +1,10 @@
 import React from 'react'
 import Loader from '../../../components/section/Loader'
 
-const loading = () => {
+const Loading = () => {
   return (
    <Loader/>
   )
 }
 
-export default loading
+export default Loading

@@ -1,68 +1,65 @@
-'use client'
-import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import { fetchProductById } from '../sanity/lib/fetchProductsByIds'
-import { urlForImage } from '../sanity/lib/image'
-import { useAuth } from '@clerk/nextjs'
+"use client";
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { fetchProductById } from "../sanity/lib/fetchProductsByIds";
+import { urlForImage } from "../sanity/lib/image";
+import { useAuth } from "@clerk/nextjs";
 
 export default function Cart({
   openPop,
   setOpenPop,
 }: {
-  openPop: boolean
-  setOpenPop: Dispatch<SetStateAction<boolean>>
+  openPop: boolean;
+  setOpenPop: Dispatch<SetStateAction<boolean>>;
 }) {
-  let [product, setProduct] = useState([])
-  let { userId } = useAuth()
+  let [product, setProduct] = useState([]);
+  let { userId } = useAuth();
   const fetchProducts = async () => {
     if (userId != null || userId != undefined) {
       const response = await fetch(
-        'http://localhost:3000/api/cart/getByUserId',
+        "http://localhost:3000/api/cart/getByUserId",
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             user_id: userId,
           }),
-        },
-      )
-      const data = await response.json()
+        }
+      );
+      const data = await response.json();
+      console.log("data: ", data);
       const products = await fetchProductById(
-        data.map((product: any) => product.product_id),
-      )
-      setProduct(
-        products.map((product: any, i: number) => ({
-          ...products[i],
-          ...data[i],
-        })),
-      )
+        data.map((product: any) => product.product_id)
+      );
+      console.log("products: ", products);
+      setProduct(products);
     }
-  }
+  };
   let handleDelete = (product_id: string) => {
     try {
       console.log({
         user_id: userId,
         product_id: product_id,
-      })
-      fetch('http://localhost:3000/api/cart/delete', {
-        method: 'POST',
+      });
+      fetch("http://localhost:3000/api/cart/delete", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           user_id: userId,
           product_id: product_id,
         }),
-      })
+      });
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-  }
+  };
   useEffect(() => {
-    fetchProducts()
-  }, [userId])
+    fetchProducts();
+  }, [useAuth().userId]);
 
   return (
     <Transition.Root show={openPop} as={Fragment}>
@@ -115,15 +112,15 @@ export default function Cart({
                             role="list"
                             className="-my-6 divide-y divide-gray-200"
                           >
-                            {product[0] &&
+                            {product &&
                               product.map((product: any) => (
                                 <li key={product._id} className="flex py-6">
                                   <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                     <img
                                       src={urlForImage(
-                                        product.images[0],
+                                        product.images[0]
                                       )?.url()}
-                                      alt={'Product Image'}
+                                      alt={"Product Image"}
                                       className="h-full w-full object-cover object-center"
                                     />
                                   </div>
@@ -205,5 +202,5 @@ export default function Cart({
         </div>
       </Dialog>
     </Transition.Root>
-  )
+  );
 }
