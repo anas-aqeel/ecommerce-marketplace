@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import React, { Fragment, useState } from 'react'
 import Cart from './Cart'
 import Link from 'next/link'
+import Image from 'next/image'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -51,11 +52,12 @@ const MenuCard = () => {
               <div>
                 <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <span className="sr-only">Open user menu</span>
-                  <img
+                  <Image
+                    priority={false}
+                    height={'20'}
+                    width={'20'}
                     className="h-8 w-8 rounded-full"
-                    src={
-                      'https://w7.pngwing.com/pngs/754/2/png-transparent-samsung-galaxy-a8-a8-user-login-telephone-avatar-pawn-blue-angle-sphere-thumbnail.png'
-                    }
+                    src={'/thumbnail.png'}
                     alt=""
                   />
                 </Menu.Button>
@@ -111,7 +113,6 @@ const MenuCard = () => {
       ) : (
         <div>
           <Loader2 className="animate-spin h-5 w-5 mr-3 text-black" />
-
         </div>
       )}
     </>

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { fetchProductById } from '../../../sanity/lib/fetchProductById'
 import { urlForImage } from '../../../lib/sanityImageBuilder'
 import AddToCart from '../../../components/AddToCart'
+import Image from 'next/image'
 
 const Page = () => {
   let productId = usePathname().split('/')[2]
@@ -17,7 +18,9 @@ const Page = () => {
         <section className="text-gray-700 body-font overflow-hidden bg-white">
           <div className="container px-5 py-24 mx-auto">
             <div className="lg:w-4/5 mx-auto flex flex-wrap">
-              <img
+              <Image
+                height={"200"}
+                width={"200"}
                 alt="ecommerce"
                 className="lg:w-1/2 w-full object-cover object-center rounded border border-gray-200"
                 src={urlForImage(product.images[0])?.url()}
@@ -45,7 +48,7 @@ const Page = () => {
                   <span className="title-font font-medium text-2xl text-gray-900">
                     ${product.price}
                   </span>
-                  <AddToCart quantity={1} productId={product._id} />
+                  <AddToCart quantity={1} productId={product._id} product={product} />
                   <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
                     <Heart className="text-red-600 hover:fill-red-600" />
                   </button>

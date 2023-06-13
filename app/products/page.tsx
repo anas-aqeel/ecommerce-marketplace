@@ -29,7 +29,7 @@ const page = () => {
           >
             <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
           </svg>
-          <span>Architecto</span>
+          <span>Men</span>
         </a>
         <a
           rel="noopener noreferrer"
@@ -49,7 +49,7 @@ const page = () => {
             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
           </svg>
-          <span>Corrupti</span>
+          <span>Women</span>
         </a>
         <a
           rel="noopener noreferrer"
@@ -68,7 +68,7 @@ const page = () => {
           >
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
           </svg>
-          <span>Excepturi</span>
+          <span>Shoes</span>
         </a>
         <a
           rel="noopener noreferrer"
@@ -88,13 +88,12 @@ const page = () => {
             <circle cx={12} cy={12} r={10} />
             <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
           </svg>
-          <span>Consectetur</span>
+          <span>Clothes</span>
         </a>
       </div>
       {/* Product List */}
       <section className="py-10 bg-gray-100">
-          <Products />
-       
+        <Products />
       </section>
     </>
   )

@@ -1,12 +1,20 @@
 'use client'
-import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react'
+import {
+  Dispatch,
+  Fragment,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { fetchProductById } from '../sanity/lib/fetchProductsByIds'
 import { urlForImage } from '../sanity/lib/image'
 import { useAuth } from '@clerk/nextjs'
-import { ToastAction } from './ui/toast'
 import { useToast } from './ui/use-toast'
 import { Loader2 } from 'lucide-react'
+import { CARTCONTEXT } from './section/CartContext'
+import { _deleteFromCart } from '../lib/cart'
+import Image from 'next/image'
 
 export default function Cart({
   openPop,
@@ -16,88 +24,38 @@ export default function Cart({
   setOpenPop: Dispatch<SetStateAction<boolean>>
 }) {
   let { toast } = useToast()
-  let [product, setProduct] = useState([])
+  let {
+    cart: { cartItems },
+    setCart,
+  } = useContext(CARTCONTEXT)
   let [total, setTotal] = useState(0)
   let { userId } = useAuth()
 
-  const fetchProducts = async () => {
-    if (userId != null || userId != undefined) {
-      const response = await fetch(
-        'http://localhost:3000/api/cart/getByUserId',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            user_id: userId,
-          }),
+  let handleClick = (product_id: string) => {
+    setCart({
+      type: 'REMOVE_FROM_CART',
+      payload: {
+        function: () => {
+          _deleteFromCart(product_id, userId, toast, setCart)
         },
-      )
-      const data = await response.json()
-
-      console.log('data: ', data)
-      const products = await fetchProductById(
-        data.map((product: any) => product.product_id),
-      )
-      console.log('products: ', products)
-      setProduct(
-        products.map((product: any, i: number) => ({
-          ...product,
-          cart: { ...data[i] },
-        })),
-      )
-    }
+        product_id,
+      },
+    })
   }
-
-  let handleDelete = async (product_id: string) => {
-    console.log('handleDelete')
-    try {
-      let delReq = await fetch('http://localhost:3000/api/cart/delete', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          product_id: product_id,
-        }),
-      })
-      console.log('delReq: ', delReq)
-      if (delReq.ok) {
-        setProduct((currentProducts) =>
-          currentProducts.filter((product: any) => product._id != product_id),
-        )
-        toast({
-          title: 'Action: Remove from Cart ',
-          description: `Item successfully removed from cart`,
-          action: <ToastAction altText="Go to cart">Add more</ToastAction>,
-        })
-      } else {
-        throw new Error('Internal Server Error')
-      }
-    } catch (e) {
-      toast({
-        title: 'Error: Remove from Cart ',
-        description: `Error while Removing from cart`,
-        action: <ToastAction altText="Go to cart">Retry</ToastAction>,
-      })
-      console.log(e)
-    }
-  }
-
-  useEffect(() => {
-    fetchProducts()
-  }, [useAuth().userId])
 
   useEffect(() => {
     setTotal(
-      product.reduce(
-        (acc, product: any) => acc + product.price * product.cart.quantity,
-        0,
+      Number(
+        Math.round(
+          cartItems?.reduce(
+            (acc: any, product: any) =>
+              acc + product.price * product.cart.quantity,
+            0,
+          ) * 100,
+        ) / 100,
       ),
     )
-  }, [product])
+  }, [cartItems])
 
   return (
     <Transition.Root show={openPop} as={Fragment}>
@@ -150,11 +108,13 @@ export default function Cart({
                             role="list"
                             className="-my-6 divide-y divide-gray-200"
                           >
-                            {product &&
-                              product.map((product: any) => (
+                            {cartItems &&
+                              cartItems.map((product: any) => (
                                 <li key={product._id} className="flex py-6">
                                   <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                    <img
+                                    <Image
+                                      height={"200"}
+                                      width={"200"}
                                       src={urlForImage(
                                         product.images[0],
                                       )?.url()}
@@ -185,10 +145,10 @@ export default function Cart({
                                       <div className="flex">
                                         <button
                                           onClick={() =>
-                                            handleDelete(product._id)
+                                            handleClick(product._id)
                                           }
                                           type="button"
-                                          className="group inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                          className="group inline-flex items-center px-4 py-2 cursor-pointer focus:cursor-not-allowed border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                         >
                                           <Loader2 className="animate-spin h-5 w-5 mr-2 text-white hidden group-focus:flex" />
                                           Remove
