@@ -26,7 +26,7 @@ const CartContext = ({ children }: any) => {
   const fetchCartProducts = async () => {
     if (userId != null || userId != undefined) {
       const response = await fetch(
-        `${process.env.HOST_NAME}/api/cart/getByUserId`,
+        `${process.env.NEXT_PUBLIC_HOST_NAME}/api/cart/getByUserId`,
         {
           method: 'POST',
           headers: {
