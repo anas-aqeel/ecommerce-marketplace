@@ -60,8 +60,9 @@ export const _deleteFromCart = async (
   toast: any,
   setCart: any,
 ) => {
+  console.log(product_id, userId, toast, setCart, "delete from cart")
   try {
-    let delReq = await fetch(`${process.env.HOST_NAME}/api/cart/delete`, {
+    let delReq = await fetch(`${process.env.NEXT_PUBLIC_HOST_NAME}/api/cart/delete`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
