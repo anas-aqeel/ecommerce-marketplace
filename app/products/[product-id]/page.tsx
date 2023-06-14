@@ -17,15 +17,15 @@ const Page = () => {
       <>
         <section className="text-gray-700 body-font overflow-hidden bg-white">
           <div className="container px-5 py-24 mx-auto">
-            <div className="lg:w-4/5 mx-auto flex flex-wrap">
+            <div className="grid md:grid-cols-2 gap-x-6 mx-auto  sm:px-20">
               <Image
-                height={"200"}
-                width={"200"}
+                height={'200'}
+                width={'200'}
                 alt="ecommerce"
-                className="lg:w-1/2 w-full object-cover object-center rounded border border-gray-200"
-                src={urlForImage(product.images[0])?.url()}
+                className="mt-5 w-full h-auto  rounded border border-gray-200"
+                src={urlForImage(product?.images[0])?.url()}
               />
-              <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+              <div className=" w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
                 <h2 className="text-sm title-font text-gray-500 tracking-widest">
                   BRAND NAME
                 </h2>
@@ -48,7 +48,11 @@ const Page = () => {
                   <span className="title-font font-medium text-2xl text-gray-900">
                     ${product.price}
                   </span>
-                  <AddToCart quantity={1} productId={product._id} product={product} />
+                  <AddToCart
+                    quantity={1}
+                    productId={product._id}
+                    product={product}
+                  />
                   <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
                     <Heart className="text-red-600 hover:fill-red-600" />
                   </button>

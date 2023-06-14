@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import MenuCard from './menuCard'
+import { Popover } from '@headlessui/react'
 const navigation = [
   { name: 'Home', href: '/', current: true },
   { name: 'Explore', href: '/products', current: false },
@@ -10,11 +11,12 @@ const navigation = [
 
 export default function Navbar() {
   return (
+    <Popover>
     <nav className="fixed top-0 left-0 z-10 w-full border-b border-gray-200 bg-white py-2.5 px-0 sm:px-4">
       <div className="container mx-auto flex max-w-6xl flex-wrap items-center justify-between">
         <Link href="/" className="flex items-center">
           <span className="self-center whitespace-nowrap text-xl font-semibold">
-            Termcode
+            E-COmMERce
           </span>
         </Link>
 
@@ -42,11 +44,12 @@ export default function Navbar() {
           </ul>
         </div>
         <div className="mt-2 sm:mt-0 flex ">
-          <MenuCard />
+          <MenuCard navigation={navigation}/>
 
           {/* = */}
         </div>
       </div>
     </nav>
+    </Popover>
   )
 }
