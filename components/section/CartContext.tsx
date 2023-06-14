@@ -20,7 +20,7 @@ const initialCartState = {
 
 const CartContext = ({ children }: any) => {
   let { userId } = useAuth()
-  let [products, setProducts] = useState([])
+  let [products, setProducts] = useState<any>("loading")
   const [state, dispatch] = useReducer(reducer, initialCartState)
 
   const fetchCartProducts = async () => {

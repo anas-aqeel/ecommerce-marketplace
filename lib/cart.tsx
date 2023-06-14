@@ -43,13 +43,18 @@ export const _addToCart = async (
       }
     } catch (e) {
       toast({
-        title: 'Error: Add to Cart ',
+        title: 'Error: Add to Cart',
         description: `Error while adding to cart`,
         action: <ToastAction altText="Go to cart">Retry</ToastAction>,
       })
       return false
     }
   } else {
+    toast({
+      title: 'Error: Authentication Required!',
+      description: `Error while adding to cart`,
+      action: <ToastAction altText="Go to cart">Sign in</ToastAction>,
+    })
     return false
   }
 }

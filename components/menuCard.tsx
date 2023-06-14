@@ -2,11 +2,11 @@
 import { useAuth } from '@clerk/nextjs'
 import { Menu, Transition } from '@headlessui/react'
 import { Loader2, ShoppingCart } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useContext, useState } from 'react'
 import Cart from './Cart'
 import Link from 'next/link'
 import Image from 'next/image'
+import { CARTCONTEXT } from './section/CartContext'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -34,6 +34,9 @@ const MenuCard = () => {
     },
   ]
   let [open, setOpen] = useState<boolean>(false)
+  let {
+    cart: { cartItems },
+  } = useContext(CARTCONTEXT)
   return (
     <>
       <Cart openPop={open} setOpenPop={setOpen} />
@@ -43,8 +46,13 @@ const MenuCard = () => {
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="rounded-full  p-1 mr-2 drop-shadow-sm  text-gray-800 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+              className="rounded-full relative p-1 mr-2 drop-shadow-sm  text-gray-800 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
             >
+              <div className="-top-1 absolute -right-1.5">
+                <p className="flex h-1 w-1 items-center justify-center rounded-full bg-red-500 p-2.5 text-xs text-white">
+                  {cartItems.length ? `${cartItems.length}` : 0}
+                </p>
+              </div>
               <span className="sr-only">View notifications</span>
               <ShoppingCart className="h-6 w-6" />
             </button>
