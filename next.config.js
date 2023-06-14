@@ -10,7 +10,7 @@ const nextConfig = {
     NEXT_PUBLIC_CLERK_API_URL: process.env.NEXT_PUBLIC_CLERK_API_URL,
     NEXT_PUBLIC_CLERK_API_KEY: process.env.NEXT_PUBLIC_CLERK_API_KEY,
     NEXT_PUBLIC_CLERK_API_SECRET: process.env.NEXT_PUBLIC_CLERK_API_SECRET,
-    
+    NEXT_PUBLIC_HOST_NAME: process.env.NEXT_PUBLIC_HOST_NAME
   },
   images:{
     domains: ['cdn.sanity.io'],
