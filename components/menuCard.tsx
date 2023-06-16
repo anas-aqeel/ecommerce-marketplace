@@ -41,10 +41,6 @@ const MenuCard = ({ navigation }: any) => {
   return (
     <>
       <Cart openPop={open} setOpenPop={setOpen} />
-      <Popover.Button className="  md:hidden inline-flex items-center justify-center  rounded-md  p-2">
-        <span className="sr-only">Open menu</span>
-        <AlignJustify className="h-6 w-6" color="black" aria-hidden="true" />
-      </Popover.Button>
       {auth.isLoaded ? (
         auth.isSignedIn ? (
           <>
@@ -55,7 +51,7 @@ const MenuCard = ({ navigation }: any) => {
             >
               <div className="-top-1 absolute -right-1.5">
                 <p className="flex h-1 w-1 items-center justify-center rounded-full bg-red-500 p-2.5 text-xs text-white">
-                  {cartItems.length ? `${cartItems.length}` : 0}
+                  {cartItems != 'loading' ? `${cartItems.length}` : 0}
                 </p>
               </div>
               <span className="sr-only">View notifications</span>
@@ -128,6 +124,11 @@ const MenuCard = ({ navigation }: any) => {
           <Loader2 className="animate-spin h-5 w-5 mr-3 text-black" />
         </div>
       )}
+      <Popover.Button className="  md:hidden inline-flex items-center justify-center  rounded-md  p-2">
+        <span className="sr-only">Open menu</span>
+        <AlignJustify className="h-6 w-6" color="black" aria-hidden="true" />
+      </Popover.Button>
+
       <Transition
         as={Fragment}
         enter="duration-200 ease-out"

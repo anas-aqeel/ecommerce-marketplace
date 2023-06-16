@@ -10,17 +10,19 @@ import reducer from '../../lib/cartReducer'
 import { useAuth } from '@clerk/nextjs'
 import { fetchProductById } from '../../sanity/lib/fetchProductsByIds'
 import { fetchAllProducts } from '../../sanity/lib/fetchAllProducts'
+import { usePathname } from 'next/navigation'
 
 export const CARTCONTEXT = createContext<any>({})
 
 const initialCartState = {
-  cartItems: [],
+  cartItems: "loading",
   state: 'default',
 }
 
 const CartContext = ({ children }: any) => {
   let { userId } = useAuth()
-  let [products, setProducts] = useState<any>("loading")
+  let pathname = usePathname()
+  let [products, setProducts] = useState<any>('loading')
   const [state, dispatch] = useReducer(reducer, initialCartState)
 
   const fetchCartProducts = async () => {
@@ -44,6 +46,7 @@ const CartContext = ({ children }: any) => {
       dispatch({
         type: 'SET_CART_PRODUCTS',
         payload: {
+          source: 'Initial',
           cartItems: products.map((product: any, i: number) => ({
             ...product,
             cart: { ...data[i] },
@@ -56,11 +59,10 @@ const CartContext = ({ children }: any) => {
   let fetchProducts = async () => {
     let response = await fetchAllProducts()
     setProducts(response)
-    console.log(response, 'response')
   }
   useEffect(() => {
     fetchProducts()
-    fetchCartProducts()
+    if (pathname != '/success') fetchCartProducts()
   }, [useAuth().userId])
 
   return (

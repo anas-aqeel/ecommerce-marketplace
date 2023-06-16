@@ -5,9 +5,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: "20
 export async function POST(request: Request, response: Response) {
     try {
         let { products } = await request.json()
-        console.log(products, "product")
         let checkoutSession = await stripe.checkout.sessions.create({
             success_url: `${process.env.NEXT_PUBLIC_HOST_NAME}/success`,
+
             currency: 'usd',
             mode: "payment",
             line_items: [

@@ -16,6 +16,7 @@ import { CARTCONTEXT } from './section/CartContext'
 import { _deleteFromCart } from '../lib/cart'
 import Image from 'next/image'
 import Checkout from './Checkout'
+import CartSkeleton from './CartSkeleton'
 
 export default function Cart({
   openPop,
@@ -45,17 +46,19 @@ export default function Cart({
   }
 
   useEffect(() => {
-    setTotal(
-      Number(
-        Math.round(
-          cartItems?.reduce(
-            (acc: any, product: any) =>
-              acc + product.price * product.cart.quantity,
-            0,
-          ) * 100,
-        ) / 100,
-      ),
-    )
+    if (cartItems != 'loading') {
+      setTotal(
+        Number(
+          Math.round(
+            cartItems?.reduce(
+              (acc: any, product: any) =>
+                acc + product.price * product.cart.quantity,
+              0,
+            ) * 100,
+          ) / 100,
+        ),
+      )
+    }
   }, [cartItems])
 
   return (
@@ -109,56 +112,60 @@ export default function Cart({
                             role="list"
                             className="-my-6 divide-y divide-gray-200"
                           >
-                            {cartItems &&
-                              cartItems.map((product: any) => (
-                                <li key={product._id} className="flex py-6">
-                                  <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                    <Image
-                                      height={'200'}
-                                      width={'200'}
-                                      src={urlForImage(
-                                        product.images[0],
-                                      )?.url()}
-                                      alt={'Product Image'}
-                                      className="h-full w-full object-cover object-center"
-                                    />
-                                  </div>
-
-                                  <div className="ml-4 flex flex-1 flex-col">
-                                    <div>
-                                      <div className="flex justify-between text-base font-medium text-gray-900">
-                                        <h3>
-                                          <a href={product.href}>
-                                            {product.name}
-                                          </a>
-                                        </h3>
-                                        <p className="ml-4">{product.price}</p>
-                                      </div>
-                                      <p className="mt-1 text-sm text-gray-500">
-                                        Yellow
-                                      </p>
+                            {cartItems == 'loading'
+                              ? [1, 2, 3].map((e) => <CartSkeleton key={e} />)
+                              : cartItems &&
+                                cartItems.map((product: any) => (
+                                  <li key={product._id} className="flex py-6">
+                                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                      <Image
+                                        height={'200'}
+                                        width={'200'}
+                                        src={urlForImage(
+                                          product.images[0],
+                                        )?.url()}
+                                        alt={'Product Image'}
+                                        className="h-full w-full object-cover object-center"
+                                      />
                                     </div>
-                                    <div className="flex flex-1 items-end justify-between text-sm">
-                                      <p className="text-gray-500">
-                                        Qty {product.cart.quantity}
-                                      </p>
 
-                                      <div className="flex">
-                                        <button
-                                          onClick={() =>
-                                            handleClick(product._id)
-                                          }
-                                          type="button"
-                                          className="group inline-flex items-center px-4 py-2 cursor-pointer focus:cursor-not-allowed border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                        >
-                                          <Loader2 className="animate-spin h-5 w-5 mr-2 text-white hidden group-focus:flex" />
-                                          Remove
-                                        </button>
+                                    <div className="ml-4 flex flex-1 flex-col">
+                                      <div>
+                                        <div className="flex justify-between text-base font-medium text-gray-900">
+                                          <h3>
+                                            <a href={product.href}>
+                                              {product.name}
+                                            </a>
+                                          </h3>
+                                          <p className="ml-4">
+                                            {product.price}
+                                          </p>
+                                        </div>
+                                        <p className="mt-1 text-sm text-gray-500">
+                                          Yellow
+                                        </p>
+                                      </div>
+                                      <div className="flex flex-1 items-end justify-between text-sm">
+                                        <p className="text-gray-500">
+                                          Qty {product.cart.quantity}
+                                        </p>
+
+                                        <div className="flex">
+                                          <button
+                                            onClick={() =>
+                                              handleClick(product._id)
+                                            }
+                                            type="button"
+                                            className="group inline-flex items-center px-4 py-2 cursor-pointer focus:cursor-not-allowed border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                          >
+                                            <Loader2 className="animate-spin h-5 w-5 mr-2 text-white hidden group-focus:flex" />
+                                            Remove
+                                          </button>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                </li>
-                              ))}
+                                  </li>
+                                ))}
                           </ul>
                         </div>
                       </div>
@@ -174,7 +181,9 @@ export default function Cart({
                       </p>
                       <div className="mt-6">
                         {/* <Checkout/> */}
-                       <Checkout products={cartItems}/>
+                        <Checkout
+                          products={cartItems != 'loading' ? cartItems : []}
+                        />
                       </div>
                       <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                         <p>

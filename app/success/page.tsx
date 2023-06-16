@@ -3,11 +3,42 @@ import { Check } from 'lucide-react'
 import Link from 'next/link'
 import React, { useContext, useEffect } from 'react'
 import { CARTCONTEXT } from '../../components/section/CartContext'
+import { useAuth } from '@clerk/nextjs'
 
-const page = () => {
+const Page = () => {
+  let { userId } = useAuth()
   let {
-    cart: { setCart },
+    setCart,
+    cart: { cartItems },
   } = useContext(CARTCONTEXT)
+
+  let clearCart = async () => {
+    let request = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST_NAME}/api/cart/clearCart`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: userId,
+        }),
+      },
+    )
+    if (request.ok) {
+      setCart({
+        type: 'SET_CART_PRODUCTS',
+        payload: {
+          source: 'Success',
+          cartItems: [],
+        },
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (userId) clearCart()
+  }, [cartItems && userId])
 
   return (
     <>
@@ -40,4 +71,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

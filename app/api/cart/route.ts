@@ -3,7 +3,6 @@ import { cartTable, db } from '../../../lib/drizzle'
 import { eq, and } from 'drizzle-orm'
 
 export async function GET(request: Request, response: Response) {
-    console.log('working')
     try {
         const selectResult = await db.select().from(cartTable)
         return NextResponse.json(selectResult)
