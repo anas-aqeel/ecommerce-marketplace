@@ -1,39 +1,22 @@
 'use client'
-import { useAuth } from '@clerk/nextjs'
-import { Menu, Popover, Transition } from '@headlessui/react'
+import {
+  ClerkLoaded,
+  ClerkLoading,
+  SignedIn,
+  UserButton,
+  useAuth,
+} from '@clerk/nextjs'
+import { Popover, Transition } from '@headlessui/react'
 import { Loader2, ShoppingCart, X } from 'lucide-react'
 import React, { Fragment, useContext, useState } from 'react'
 import Cart from './Cart'
 import Link from 'next/link'
-import Image from 'next/image'
 import { CARTCONTEXT } from './section/CartContext'
 import { AlignJustify } from 'lucide-react'
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
 
 const MenuCard = ({ navigation }: any) => {
   let auth = useAuth()
-  let menuItems = [
-    {
-      label: 'Your Profile',
-      href: '/profile',
-      onclick: () => {},
-    },
-    {
-      label: 'Settings',
-      href: '/settings',
-      onclick: () => {},
-    },
-    {
-      label: 'Sign out',
-      href: '/sign-up',
-      onclick: () => {
-        auth.signOut()
-      },
-    },
-  ]
   let [open, setOpen] = useState<boolean>(false)
   let {
     cart: { cartItems },
@@ -41,67 +24,25 @@ const MenuCard = ({ navigation }: any) => {
   return (
     <>
       <Cart openPop={open} setOpenPop={setOpen} />
-      {auth.isLoaded ? (
-        auth.isSignedIn ? (
-          <>
-            <button
-              type="button"
-              onClick={() => setOpen(true)}
-              className="rounded-full relative p-1 mr-2 drop-shadow-sm  text-gray-800 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-            >
-              <div className="-top-1 absolute -right-1.5">
-                <p className="flex h-1 w-1 items-center justify-center rounded-full bg-red-500 p-2.5 text-xs text-white">
-                  {cartItems != 'loading' ? `${cartItems.length}` : 0}
-                </p>
-              </div>
-              <span className="sr-only">View notifications</span>
-              <ShoppingCart className="h-6 w-6" />
-            </button>
-            <Menu as="div" className="relative ml-3">
-              <div>
-                <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                  <span className="sr-only">Open user menu</span>
-                  <Image
-                    priority={false}
-                    height={'20'}
-                    width={'20'}
-                    className="h-8 w-8 rounded-full"
-                    src={'/thumbnail.png'}
-                    alt=""
-                  />
-                </Menu.Button>
-              </div>
-              <Transition
-                as={Fragment}
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              >
-                <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {menuItems.map((e, i) => (
-                    <Menu.Item key={i}>
-                      {({ active }) => (
-                        <Link
-                          onClick={e.onclick}
-                          href={e.href}
-                          shallow
-                          className={classNames(
-                            active ? 'bg-gray-100' : '',
-                            'w-full text-start block px-4 py-2 text-sm text-gray-700',
-                          )}
-                        >
-                          {e.label}
-                        </Link>
-                      )}
-                    </Menu.Item>
-                  ))}
-                </Menu.Items>
-              </Transition>
-            </Menu>
-          </>
+      <SignedIn>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="rounded-full relative  p-1 mr-4 drop-shadow-sm  text-gray-800 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+        >
+          <div className="-top-1 absolute -right-1.5">
+            <p className="flex h-1 w-1 items-center justify-center rounded-full bg-red-500 p-2.5 text-xs text-white">
+              {cartItems != 'loading' ? `${cartItems.length}` : 0}
+            </p>
+          </div>
+          <span className="sr-only">View notifications</span>
+          <ShoppingCart className="h-6 w-6" />
+        </button>
+        <UserButton afterSignOutUrl="/" />
+      </SignedIn>
+      <ClerkLoaded>
+        {auth.isSignedIn ? (
+          <></>
         ) : (
           <>
             {' '}
@@ -118,12 +59,14 @@ const MenuCard = ({ navigation }: any) => {
               Register
             </Link>{' '}
           </>
-        )
-      ) : (
-        <div>
-          <Loader2 className="animate-spin h-5 w-5 mr-3 text-black" />
+        )}
+      </ClerkLoaded>
+      <ClerkLoading>
+        <div className="flex justify-center items-center">
+          <Loader2 color="black" className="animate-spin" />
         </div>
-      )}
+      </ClerkLoading>
+
       <Popover.Button className="  md:hidden inline-flex items-center justify-center  rounded-md  p-2">
         <span className="sr-only">Open menu</span>
         <AlignJustify className="h-6 w-6" color="black" aria-hidden="true" />
