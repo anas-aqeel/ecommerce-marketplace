@@ -1,6 +1,5 @@
 "use client"
 import React from 'react'
-import ProfileCard from '../../components/ProfileCard'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@clerk/nextjs'
 
