@@ -15,6 +15,7 @@ import { Loader2 } from 'lucide-react'
 import { CARTCONTEXT } from './section/CartContext'
 import { _deleteFromCart } from '../lib/cart'
 import Image from 'next/image'
+import Checkout from './Checkout'
 
 export default function Cart({
   openPop,
@@ -113,8 +114,8 @@ export default function Cart({
                                 <li key={product._id} className="flex py-6">
                                   <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                     <Image
-                                      height={"200"}
-                                      width={"200"}
+                                      height={'200'}
+                                      width={'200'}
                                       src={urlForImage(
                                         product.images[0],
                                       )?.url()}
@@ -172,12 +173,8 @@ export default function Cart({
                         Shipping and taxes calculated at checkout.
                       </p>
                       <div className="mt-6">
-                        <a
-                          href="#"
-                          className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                        >
-                          Checkout
-                        </a>
+                        {/* <Checkout/> */}
+                       <Checkout products={cartItems}/>
                       </div>
                       <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                         <p>
